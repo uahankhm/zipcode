@@ -7,27 +7,36 @@
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
     #result { margin-top: 20px; font-weight: bold; color: green; }
+    #copyButton { margin-top: 20px; padding: 10px 20px; }
   </style>
 </head>
-<body onload="execDaumPostcode()">
+<body>
   <h2>도로명주소 검색</h2>
+  <button onclick="execDaumPostcode()">🔍 주소 검색하기</button>
   <div id="result"></div>
+  <button id="copyButton" onclick="copyAddress()" style="display:none">📋 주소 복사하기</button>
 
   <script>
+    let selectedAddress = "";
+
     function execDaumPostcode() {
       new daum.Postcode({
         oncomplete: function(data) {
-          const addr = data.roadAddress;
-          document.getElementById('result').innerText = "✅ 복사된 주소: " + addr;
-
-          // 클립보드에 복사
-          navigator.clipboard.writeText(addr).then(function() {
-            alert("✅ 주소가 클립보드에 복사되었습니다.\n엑셀로 돌아가서 [주소 붙여넣기] 버튼을 눌러주세요.");
-          }, function(err) {
-            alert("❗️ 클립보드 복사에 실패했습니다. 수동으로 복사하세요.");
-          });
+          selectedAddress = data.roadAddress;
+          document.getElementById('result').innerText = "✅ 선택한 주소: " + selectedAddress;
+          document.getElementById('copyButton').style.display = 'inline-block';
         }
       }).open();
+    }
+
+    function copyAddress() {
+      if (selectedAddress !== "") {
+        navigator.clipboard.writeText(selectedAddress).then(function() {
+          alert("✅ 주소가 클립보드에 복사되었습니다. 엑셀로 돌아가서 [주소 붙여넣기] 버튼을 눌러주세요.");
+        }, function(err) {
+          alert("❗️ 클립보드 복사에 실패했습니다. 수동으로 복사하세요.");
+        });
+      }
     }
   </script>
 </body>
