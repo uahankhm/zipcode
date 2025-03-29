@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>도로명주소 검색</title>
+  <script src="https://ssl.daumcdn.net/dmaps/map_js_init/postcode.v2.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #result { margin-top: 20px; font-weight: bold; color: green; }
+  </style>
+</head>
+<body onload="execDaumPostcode()">
+  <h2>도로명주소 검색</h2>
+  <div id="result"></div>
+
+  <script>
+    function execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: function(data) {
+          const addr = data.roadAddress;
+          document.getElementById('result').innerText = "✅ 복사된 주소: " + addr;
+
+          // 클립보드에 복사
+          navigator.clipboard.writeText(addr).then(function() {
+            alert("✅ 주소가 클립보드에 복사되었습니다.\n엑셀로 돌아가서 [주소 붙여넣기] 버튼을 눌러주세요.");
+          }, function(err) {
+            alert("❗️ 클립보드 복사에 실패했습니다. 수동으로 복사하세요.");
+          });
+        }
+      }).open();
+    }
+  </script>
+</body>
+</html>
